@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.claude/
+
+# Logs
+*.log
+
+# Chrome extension packaging
+*.pem
+*.crx
+*.zip
+
+# Node modules (if any)
+node_modules/
+
+# Test files with credentials
+test-api.sh
+test-api.html
+TESTING.md

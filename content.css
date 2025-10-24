@@ -1,0 +1,116 @@
+/* Styles for Vaspian One Click content script */
+
+.vaspian-phone {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #2196F3;
+  transition: color 0.2s;
+}
+
+.vaspian-phone:hover {
+  color: #1976D2;
+}
+
+.vaspian-notification {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  min-width: 320px;
+  padding: 0;
+  border-radius: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 999999;
+  animation: vaspian-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.vaspian-notification-success {
+  background: linear-gradient(135deg, #E89029 0%, #E66825 80%, #B88BBD 100%);
+  color: white;
+}
+
+.vaspian-notification-error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.vaspian-notification-content {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.vaspian-notification-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+.vaspian-notification-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: white;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.vaspian-notification-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.vaspian-notification-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  opacity: 0.9;
+  letter-spacing: 0.01em;
+}
+
+.vaspian-notification-subtitle {
+  font-size: 12px;
+  font-weight: 500;
+  margin: 4px 0 2px 0;
+  opacity: 0.85;
+  letter-spacing: 0.01em;
+}
+
+.vaspian-notification-number {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes vaspian-slide-in {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes vaspian-slide-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
