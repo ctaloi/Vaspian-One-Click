@@ -18,7 +18,8 @@
 
 ### From Web Pages
 
-- Phone numbers on web pages are automatically highlighted in orange
+- Phone numbers on web pages are automatically detected
+- Hover over a phone number to see a subtle orange highlight
 - Click any phone number to instantly dial
 - A notification will confirm the call is being placed
 
@@ -26,13 +27,13 @@
 
 ## 🔢 Dial Prefix
 
-Some phone systems require a prefix (like 8 or 9) to dial external numbers:
+The Vaspian Phone System may require a prefix (like 8 or 9) to dial external numbers:
 
 - **No prefix:** Direct dialing (default)
 - **Prefix with 8:** Adds "8" before the number (e.g., 85551234567)
 - **Prefix with 9:** Adds "9" before the number (e.g., 95551234567)
 
-> **Note:** Contact Vaspian Support if you're unsure which prefix to use.
+> **Note:** Contact Vaspian if you're unsure which prefix to use for your configuration.
 
 ---
 
@@ -150,12 +151,12 @@ The CSV includes:
 
 ## Support
 
-Need help? Contact Vaspian Support:
+Need help? Contact Vaspian for assistance:
 
 - **Email:** [support@vaspian.com](mailto:support@vaspian.com)
 - **Phone:** [716-961-2120](tel:+17169612120)
 
-Our support team is here to help with any questions or issues you may have.
+We're here to help with any questions or issues you may have.
 
 ---
 

@@ -7,10 +7,49 @@
   // Phone number regex patterns
   const phonePatterns = [
     /\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/g,           // 123-456-7890, 123.456.7890, 123 456 7890
-    /\b\(\d{3}\)\s?\d{3}[-.\s]?\d{4}\b/g,          // (123) 456-7890
-    /\b\d{10,15}\b/g,                                // 1234567890, 817169212120
-    /\+\d{1,3}\s?\d{10,14}\b/g                       // +1 1234567890
+    /\(\d{3}\)\s?\d{3}[-.\s]?\d{4}\b/g,            // (123) 456-7890, (716) 923-4121
+    /\(\d{3}\)[-.\s]?\d{3}[-.\s]?\d{4}\b/g,        // (123)-456-7890
+    /\b\d{1,3}[-.\s]?(?:\d{3}|\([A-Za-z0-9]{3}\))[-.\s]?[A-Za-z][A-Za-z0-9\-.\s]{4,}\b/g,  // 1-855-VASPIAN, 1-800-FLOWERS, 1-800-GO-FEDEX
+    /\([A-Za-z0-9]{3}\)\s?[A-Za-z][A-Za-z0-9\-.\s]{4,}\b/g,  // (800) MATTRESS
+    /\b\d{10,11}\b/g,                                // 1234567890, 12345678901 (10-11 digits only)
+    /\+\d{1,3}\s?\d{10,11}\b/g                       // +1 1234567890 (international with 10-11 digits)
   ];
+
+  /**
+   * Convert letters to phone digits based on phone keypad mapping
+   * @param {string} text - Text containing letters and/or digits
+   * @returns {string} - Text with letters converted to digits
+   */
+  function convertLettersToDigits(text) {
+    const letterMap = {
+      'a': '2', 'b': '2', 'c': '2',
+      'd': '3', 'e': '3', 'f': '3',
+      'g': '4', 'h': '4', 'i': '4',
+      'j': '5', 'k': '5', 'l': '5',
+      'm': '6', 'n': '6', 'o': '6',
+      'p': '7', 'q': '7', 'r': '7', 's': '7',
+      't': '8', 'u': '8', 'v': '8',
+      'w': '9', 'x': '9', 'y': '9', 'z': '9'
+    };
+
+    return text.toLowerCase().split('').map(char => {
+      return letterMap[char] || char;
+    }).join('');
+  }
+
+  /**
+   * Validate that a phone number has exactly 10 or 11 digits
+   * @param {string} phoneNumber - Phone number text (may contain letters/formatting)
+   * @returns {boolean} - True if valid 10 or 11 digit number
+   */
+  function isValidPhoneNumber(phoneNumber) {
+    // Convert letters to digits
+    const withDigits = convertLettersToDigits(phoneNumber);
+    // Remove all non-digit characters except +
+    const digitsOnly = withDigits.replace(/[^\d+]/g, '').replace(/\+/g, '');
+    // Must be exactly 10 or 11 digits
+    return digitsOnly.length === 10 || digitsOnly.length === 11;
+  }
 
   /**
    * Initialize the click-to-call functionality
@@ -110,11 +149,12 @@
       }
     });
 
-    // Remove duplicates and sort by index
+    // Remove duplicates, validate digit count, and sort by index
     matches = matches
       .filter((match, index, self) =>
         index === self.findIndex(m => m.index === match.index)
       )
+      .filter(match => isValidPhoneNumber(match.text))  // Only keep 10-11 digit numbers
       .sort((a, b) => a.index - b.index);
 
     // Create the fragment with clickable phone numbers
@@ -154,22 +194,11 @@
     span.textContent = phoneNumber;
     span.className = 'vaspian-phone';
     span.title = `Click to call ${phoneNumber}`;
-    span.style.cursor = 'pointer';
-    span.style.textDecoration = 'underline';
-    span.style.color = '#E66825';
 
     span.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       makeCall(phoneNumber);
-    });
-
-    span.addEventListener('mouseenter', () => {
-      span.style.color = '#E89029';
-    });
-
-    span.addEventListener('mouseleave', () => {
-      span.style.color = '#E66825';
     });
 
     return span;
@@ -202,8 +231,11 @@
    * @param {string} phoneNumber
    */
   async function makeCall(phoneNumber) {
+    // Convert any letters to digits (for vanity numbers like 1-855-VASPIAN)
+    const withDigits = convertLettersToDigits(phoneNumber);
+
     // Clean the phone number (remove formatting, but keep +)
-    const cleanNumber = phoneNumber.replace(/[\s.\-()]/g, '');
+    const cleanNumber = withDigits.replace(/[\s.\-()]/g, '');
 
     try {
       const response = await chrome.runtime.sendMessage({

@@ -49,6 +49,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('exportHistoryInline').addEventListener('click', exportCallHistory);
   document.getElementById('logoutBtnLoggedIn').addEventListener('click', logout);
   document.getElementById('goToSettings').addEventListener('click', () => switchTab('settings'));
+
+  // Logout modal buttons
+  document.getElementById('cancelLogout').addEventListener('click', hideLogoutModal);
+  document.getElementById('logoutWithoutExport').addEventListener('click', performLogout);
+  document.getElementById('exportAndLogout').addEventListener('click', async () => {
+    await exportCallHistory();
+    await performLogout();
+  });
+
+  // Close modal when clicking overlay
+  document.querySelector('.modal-overlay')?.addEventListener('click', hideLogoutModal);
   document.getElementById('helpToggle').addEventListener('click', toggleHelp);
   document.getElementById('advancedToggle').addEventListener('click', toggleAdvanced);
 
@@ -847,9 +858,36 @@ async function populateTestData() {
 }
 
 /**
- * Logout and clear session
+ * Show logout confirmation modal
  */
 async function logout() {
+  // Check if there's any call history
+  const response = await chrome.runtime.sendMessage({ action: 'getCallHistory' });
+  const callHistory = response.callHistory || [];
+
+  // If no history, logout directly without confirmation
+  if (callHistory.length === 0) {
+    await performLogout();
+    return;
+  }
+
+  // Show confirmation modal
+  const modal = document.getElementById('logoutModal');
+  modal.style.display = 'flex';
+}
+
+/**
+ * Hide logout confirmation modal
+ */
+function hideLogoutModal() {
+  const modal = document.getElementById('logoutModal');
+  modal.style.display = 'none';
+}
+
+/**
+ * Perform the actual logout
+ */
+async function performLogout() {
   try {
     const response = await chrome.runtime.sendMessage({ action: 'logout' });
     if (response.success) {
@@ -864,6 +902,9 @@ async function logout() {
 
       await updateLoginStatus();
       showStatus('settingsStatus', 'Logged out successfully - credentials and history cleared', 'success');
+
+      // Hide modal if it's open
+      hideLogoutModal();
     }
   } catch (error) {
     console.error('Error logging out:', error);

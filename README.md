@@ -1,6 +1,6 @@
 # Vaspian One Click
 
-A modern, performant Chrome extension that integrates seamlessly with the Vaspian phone system, providing one-click calling functionality with a beautiful, intuitive interface.
+A modern, performant Chrome extension that integrates seamlessly with the Vaspian Phone System, providing one-click calling functionality with a beautiful, intuitive interface.
 
 ![Version](https://img.shields.io/badge/version-1.0.0-orange)
 ![Manifest](https://img.shields.io/badge/manifest-v3-blue)
@@ -24,13 +24,13 @@ A modern, performant Chrome extension that integrates seamlessly with the Vaspia
 ### 🔧 Advanced Features
 - **Dial Prefix Support**: Configure prefixes (8 or 9) for external dialing
 - **Debug Logging**: Comprehensive logging system for troubleshooting
-- **Auto-Detection**: Phone numbers on web pages are automatically highlighted
+- **Auto-Detection**: Phone numbers on web pages are automatically detected with subtle hover effects
 - **Secure Storage**: Credentials safely stored in Chrome's encrypted sync storage
 
 ## 📋 Requirements
 
 - Google Chrome (version 88 or higher)
-- Active Vaspian phone system account
+- Active Vaspian Phone System account
 - Access to `xtone.buf.vaspian.net`
 
 ## 🚀 Installation
@@ -66,7 +66,7 @@ A modern, performant Chrome extension that integrates seamlessly with the Vaspia
 3. **Click "Login"** to verify your credentials
 
 4. **Optional: Configure Advanced Settings**
-   - Set a dial prefix (if required by your phone system)
+   - Set a dial prefix (if required by your Vaspian Phone System configuration)
    - Enable debug logging for troubleshooting
    - Toggle sidebar mode for persistent access
 
@@ -287,7 +287,7 @@ Parameters:
 
 ## 📄 License
 
-This extension is proprietary software provided for use with the Vaspian phone system.
+This extension is proprietary software provided for use with the Vaspian Phone System.
 
 ## 🙏 Acknowledgments
 
