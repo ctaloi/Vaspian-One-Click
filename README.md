@@ -39,8 +39,8 @@ A modern, performant Chrome extension that integrates seamlessly with the Vaspia
 
 1. **Clone or download this repository**
    ```bash
-   git clone https://github.com/yourusername/vaspian-chrome.git
-   cd vaspian-chrome
+   git clone https://github.com/ctaloi/Vaspian-One-Click.git
+   cd Vaspian-One-Click
    ```
 
 2. **Open Chrome Extensions**
