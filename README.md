@@ -4,7 +4,7 @@ A modern, performant Chrome extension that integrates seamlessly with the Vaspia
 
 ![Version](https://img.shields.io/badge/version-1.0.0-orange)
 ![Manifest](https://img.shields.io/badge/manifest-v3-blue)
-![License](https://img.shields.io/badge/license-Proprietary-red)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 ## ✨ Features
 
@@ -287,7 +287,9 @@ Parameters:
 
 ## 📄 License
 
-This extension is proprietary software provided for use with the Vaspian Phone System.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+This is open source software. Contributions are welcome!
 
 ## 🙏 Acknowledgments
 
