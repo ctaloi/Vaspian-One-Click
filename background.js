@@ -8,25 +8,33 @@ let sidebarEnabled = false;
 let isLoggedIn = false;
 
 // Set default preferences on first install
-chrome.runtime.onInstalled.addListener((details) => {
+chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
-    // Set sidebar mode as default on first install
-    chrome.storage.sync.set({
+    // Set defaults on first install
+    await chrome.storage.sync.set({
       useSidebar: true,
-      debugLogging: false
+      debugLogging: false,
+      dialPrefix: '8'
     });
     sidebarEnabled = true;
     updateActionBehavior();
+  } else {
+    // On update or other reasons, load existing preferences
+    loadPreferences();
   }
 });
 
 // Load logging and sidebar preferences on startup
-chrome.storage.sync.get(['debugLogging', 'useSidebar', 'isLoggedIn'], (result) => {
-  loggingEnabled = result.debugLogging || false;
-  sidebarEnabled = result.useSidebar || false;
-  isLoggedIn = result.isLoggedIn || false;
-  updateActionBehavior();
-});
+loadPreferences();
+
+function loadPreferences() {
+  chrome.storage.sync.get(['debugLogging', 'useSidebar', 'isLoggedIn'], (result) => {
+    loggingEnabled = result.debugLogging || false;
+    sidebarEnabled = result.useSidebar !== undefined ? result.useSidebar : true;
+    isLoggedIn = result.isLoggedIn || false;
+    updateActionBehavior();
+  });
+}
 
 async function addLog(level, message, details = null) {
   // Skip logging if disabled (except for errors)
@@ -384,19 +392,26 @@ async function makeCall(origExt, destExt) {
 }
 
 /**
+ * Handle extension icon clicks (only for sidebar mode)
+ */
+function handleActionClick(tab) {
+  if (sidebarEnabled) {
+    chrome.sidePanel.open({ windowId: tab.windowId });
+  }
+}
+
+// Set up the click listener once
+chrome.action.onClicked.addListener(handleActionClick);
+
+/**
  * Update the action behavior based on sidebar preference
  */
 function updateActionBehavior() {
   if (sidebarEnabled) {
-    // When sidebar is enabled, disable the popup and open the side panel on click
+    // When sidebar is enabled, disable the popup and use the click listener
     chrome.action.setPopup({ popup: '' });
-
-    // Listen for extension icon clicks to open the side panel
-    chrome.action.onClicked.addListener((tab) => {
-      chrome.sidePanel.open({ windowId: tab.windowId });
-    });
   } else {
-    // When sidebar is disabled, enable the popup
+    // When sidebar is disabled, enable the popup (click listener is ignored)
     chrome.action.setPopup({ popup: 'popup.html' });
   }
 }
@@ -451,12 +466,15 @@ async function handleLogout() {
       addLog('info', `Removed cookie: ${cookie.name}`);
     }
 
-    // Clear credentials
+    // Get current dialPrefix to preserve it
+    const settings = await chrome.storage.sync.get(['dialPrefix']);
+
+    // Clear credentials but preserve dialPrefix (including empty string for "no prefix")
     await chrome.storage.sync.set({
       tenant: '',
       extension: '',
       password: '',
-      dialPrefix: '',
+      dialPrefix: settings.dialPrefix !== undefined ? settings.dialPrefix : '8',  // Preserve current setting or default to '8'
       isLoggedIn: false
     });
 

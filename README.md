@@ -22,7 +22,7 @@ A modern, performant Chrome extension that integrates seamlessly with the Vaspia
 - **Smooth Animations**: Carefully crafted transitions for a premium feel
 
 ### 🔧 Advanced Features
-- **Dial Prefix Support**: Configure prefixes (8 or 9) for external dialing
+- **Dial Prefix Support**: Defaults to "8" prefix; configurable to "9" or no prefix for external dialing
 - **Debug Logging**: Comprehensive logging system for troubleshooting
 - **Auto-Detection**: Phone numbers on web pages are automatically detected with subtle hover effects
 - **Secure Storage**: Credentials safely stored in Chrome's encrypted sync storage
@@ -66,7 +66,8 @@ A modern, performant Chrome extension that integrates seamlessly with the Vaspia
 3. **Click "Login"** to verify your credentials
 
 4. **Optional: Configure Advanced Settings**
-   - Set a dial prefix (if required by your Vaspian Phone System configuration)
+   - Dial prefix is set to "8" by default (works for most configurations)
+   - Change the prefix to "9" or "No prefix" if your system requires it
    - Enable debug logging for troubleshooting
    - Toggle sidebar mode for persistent access
 
@@ -171,8 +172,6 @@ vaspian-chrome/
 ### Permissions Explained
 
 - `storage`: Save your credentials and settings
-- `activeTab`: Detect phone numbers on the current page
-- `scripting`: Inject content script for click-to-call
 - `cookies`: Manage session cookies for API authentication
 - `sidePanel`: Enable sidebar mode
 - `https://xtone.buf.vaspian.net/*`: Make API calls to Vaspian
@@ -184,7 +183,7 @@ vaspian-chrome/
 1. **Verify credentials** in Settings tab
 2. **Enable Debug Logging** (Settings → Advanced Settings)
 3. **Check the Logs tab** for error messages
-4. **Verify dial prefix** is set correctly (if required)
+4. **Verify dial prefix** setting (defaults to "8"; change if your system requires "9" or no prefix)
 5. **Contact support** if issues persist
 
 ### Phone Numbers Not Detected
@@ -269,7 +268,7 @@ Parameters:
 - Call history with notes support
 - CSV export functionality
 - Sidebar mode support
-- Dial prefix configuration
+- Dial prefix configuration (defaults to "8")
 - Debug logging system
 - Optimized performance and animations
 - Comprehensive security measures

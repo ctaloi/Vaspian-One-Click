@@ -69,8 +69,6 @@ The Extension requests the following Chrome permissions:
 | Permission | Purpose |
 |------------|---------|
 | `storage` | Save your credentials, settings, and call history locally |
-| `activeTab` | Detect phone numbers on the webpage you're viewing |
-| `scripting` | Inject content script to enable click-to-call functionality |
 | `cookies` | Manage session cookies for Vaspian API authentication |
 | `sidePanel` | Enable sidebar mode for the Extension |
 | `https://xtone.buf.vaspian.net/*` | Make API calls to Vaspian Phone System |

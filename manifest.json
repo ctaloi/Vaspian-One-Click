@@ -5,8 +5,6 @@
   "description": "One-click calling for Vaspian Phone System",
   "permissions": [
     "storage",
-    "activeTab",
-    "scripting",
     "cookies",
     "sidePanel"
   ],

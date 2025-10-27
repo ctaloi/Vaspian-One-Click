@@ -29,11 +29,11 @@
 
 The Vaspian Phone System may require a prefix (like 8 or 9) to dial external numbers:
 
-- **No prefix:** Direct dialing (default)
-- **Prefix with 8:** Adds "8" before the number (e.g., 85551234567)
+- **Prefix with 8:** Adds "8" before the number (e.g., 85551234567) - **Default**
 - **Prefix with 9:** Adds "9" before the number (e.g., 95551234567)
+- **No prefix:** Direct dialing
 
-> **Note:** Contact Vaspian if you're unsure which prefix to use for your configuration.
+> **Note:** The extension defaults to prefix "8" which works for most Vaspian configurations. You can change this setting in Advanced Settings if needed. Your prefix setting is preserved even after logout.
 
 ---
 
@@ -95,7 +95,7 @@ Click "Logout" to:
 
 Access Advanced Settings from the Settings tab to configure:
 
-- **Dial Prefix:** Add a prefix (8 or 9) before dialed numbers for external calls
+- **Dial Prefix:** Prefix for external calls (defaults to "8"; change to "9" or no prefix if needed)
 - **Enable Debug Logging:** Show detailed activity logs for troubleshooting
 
 ---
@@ -133,7 +133,7 @@ The CSV includes:
 1. Verify your credentials in Settings are correct
 2. Enable Debug Logging in Advanced Settings
 3. Check the Logs tab for error messages
-4. Ensure you have the correct dial prefix configured
+4. Ensure you have the correct dial prefix configured (defaults to "8")
 
 ### Extension not appearing?
 

@@ -97,6 +97,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  // Listen for storage changes to update call history in real-time
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === 'local' && changes.callHistory) {
+      // Call history was updated, reload it
+      loadCallHistory();
+    }
+  });
+
   // Auto-refresh logs when on logs tab (check settings each time)
   setInterval(async () => {
     if (currentTab === 'logs') {
@@ -269,8 +277,8 @@ async function loadSettings() {
       document.getElementById('password').value = settings.password;
     }
 
-    // Set dial prefix (default to empty string)
-    document.getElementById('dialPrefix').value = settings.dialPrefix || '';
+    // Set dial prefix (default to '8')
+    document.getElementById('dialPrefix').value = settings.dialPrefix !== undefined ? settings.dialPrefix : '8';
 
     // Set debug logging checkbox (default to false)
     document.getElementById('debugLogging').checked = settings.debugLogging || false;
@@ -891,11 +899,11 @@ async function performLogout() {
   try {
     const response = await chrome.runtime.sendMessage({ action: 'logout' });
     if (response.success) {
-      // Clear the form fields
+      // Clear the credential fields (but preserve dialPrefix)
       document.getElementById('tenant').value = '';
       document.getElementById('extension').value = '';
       document.getElementById('password').value = '';
-      document.getElementById('dialPrefix').value = '';
+      // dialPrefix is preserved - don't clear it
 
       // Clear the click history display
       displayCallHistory([]);
