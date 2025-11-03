@@ -14,7 +14,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     await chrome.storage.sync.set({
       useSidebar: true,
       debugLogging: false,
-      dialPrefix: '8'
+      dialPrefix: '8',
+      clickToCallEnabled: true,
+      clickToCallDisabledSites: []
     });
     sidebarEnabled = true;
     updateActionBehavior();

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Click-to-Call Test Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #E66825;
+    }
+    .test-section {
+      margin: 30px 0;
+      padding: 20px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+    }
+    .phone-number {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Click-to-Call Test Page</h1>
+
+  <div class="test-section">
+    <h2>Test Phone Numbers</h2>
+    <p class="phone-number">Support: 716-961-2120</p>
+    <p class="phone-number">Sales: (555) 123-4567</p>
+    <p class="phone-number">Emergency: 555.987.6543</p>
+    <p class="phone-number">International: +1 5551234567</p>
+    <p class="phone-number">Vanity: 1-800-FLOWERS</p>
+    <p class="phone-number">Simple: 5551234567</p>
+  </div>
+
+  <div class="test-section">
+    <h2>Testing Instructions</h2>
+    <ol>
+      <li>Install or reload the Vaspian One Click extension</li>
+      <li>Phone numbers above should be highlighted and clickable</li>
+      <li>Open the extension popup and go to Settings</li>
+      <li>Click "Advanced Settings"</li>
+      <li>Test the following scenarios:</li>
+    </ol>
+
+    <h3>Scenario 1: Global Disable</h3>
+    <ul>
+      <li>Uncheck "Enable Click-to-Call on Web Pages"</li>
+      <li>Reload this page</li>
+      <li>Phone numbers should no longer be clickable</li>
+      <li>Re-enable and reload to restore functionality</li>
+    </ul>
+
+    <h3>Scenario 2: Per-Site Disable</h3>
+    <ul>
+      <li>Ensure "Enable Click-to-Call on Web Pages" is checked</li>
+      <li>In the "Disabled Sites" section, enter the current hostname</li>
+      <li>For local file: enter "localhost" or the actual hostname</li>
+      <li>Click "Add"</li>
+      <li>Reload this page</li>
+      <li>Phone numbers should no longer be clickable</li>
+      <li>Remove the site from the disabled list and reload to restore</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>Expected Behavior</h2>
+    <ul>
+      <li>When enabled: Phone numbers are highlighted with an orange underline on hover</li>
+      <li>When enabled: Clicking a phone number shows a notification and initiates a call</li>
+      <li>When disabled globally: No phone number detection occurs</li>
+      <li>When disabled per-site: Phone numbers on that specific site are not clickable</li>
+      <li>Console message appears when click-to-call is disabled for a site</li>
+    </ul>
+  </div>
+</body>
+</html>

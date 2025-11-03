@@ -67,6 +67,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('useSidebar').addEventListener('change', autoSaveSidebar);
   document.getElementById('dialPrefix').addEventListener('change', autoSaveDialPrefix);
   document.getElementById('debugLogging').addEventListener('change', autoSaveDebugLogging);
+  document.getElementById('clickToCallEnabled').addEventListener('change', autoSaveClickToCall);
+
+  // Disabled sites management
+  document.getElementById('addDisabledSite').addEventListener('click', addDisabledSite);
+  document.getElementById('newDisabledSite').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addDisabledSite();
+    }
+  });
 
   // Handle support phone number clicks
   document.querySelectorAll('.support-phone-link').forEach(link => {
@@ -265,7 +275,7 @@ function clearPhoneNumber() {
  */
 async function loadSettings() {
   try {
-    const settings = await chrome.storage.sync.get(['tenant', 'extension', 'password', 'dialPrefix', 'debugLogging', 'useSidebar']);
+    const settings = await chrome.storage.sync.get(['tenant', 'extension', 'password', 'dialPrefix', 'debugLogging', 'useSidebar', 'clickToCallEnabled', 'clickToCallDisabledSites']);
 
     if (settings.tenant) {
       document.getElementById('tenant').value = settings.tenant;
@@ -285,6 +295,12 @@ async function loadSettings() {
 
     // Set sidebar checkbox (default to false)
     document.getElementById('useSidebar').checked = settings.useSidebar || false;
+
+    // Set click-to-call enabled checkbox (default to true)
+    document.getElementById('clickToCallEnabled').checked = settings.clickToCallEnabled !== false;
+
+    // Load disabled sites list
+    await loadDisabledSites();
   } catch (error) {
     console.error('Error loading settings:', error);
   }
@@ -407,6 +423,112 @@ async function autoSaveDebugLogging() {
     console.log('Debug logging:', debugLogging ? 'enabled' : 'disabled');
   } catch (error) {
     console.error('Error saving debug logging setting:', error);
+  }
+}
+
+/**
+ * Auto-save click-to-call enabled setting
+ */
+async function autoSaveClickToCall() {
+  const clickToCallEnabled = document.getElementById('clickToCallEnabled').checked;
+
+  try {
+    await chrome.storage.sync.set({ clickToCallEnabled });
+    console.log('Click-to-call:', clickToCallEnabled ? 'enabled' : 'disabled');
+
+    showStatus('settingsStatus', `Click-to-call ${clickToCallEnabled ? 'enabled' : 'disabled'}. Reload pages to apply.`, 'success');
+  } catch (error) {
+    console.error('Error saving click-to-call setting:', error);
+  }
+}
+
+/**
+ * Load disabled sites list
+ */
+async function loadDisabledSites() {
+  try {
+    const settings = await chrome.storage.sync.get(['clickToCallDisabledSites']);
+    const disabledSites = settings.clickToCallDisabledSites || [];
+
+    const listContainer = document.getElementById('disabledSitesList');
+    listContainer.innerHTML = '';
+
+    disabledSites.forEach(site => {
+      const item = document.createElement('div');
+      item.className = 'disabled-site-item';
+      item.innerHTML = `
+        <span class="disabled-site-url">${site}</span>
+        <button class="btn-remove" data-site="${site}">Remove</button>
+      `;
+
+      // Add remove button listener
+      item.querySelector('.btn-remove').addEventListener('click', () => removeDisabledSite(site));
+
+      listContainer.appendChild(item);
+    });
+  } catch (error) {
+    console.error('Error loading disabled sites:', error);
+  }
+}
+
+/**
+ * Add a site to the disabled list
+ */
+async function addDisabledSite() {
+  const input = document.getElementById('newDisabledSite');
+  let site = input.value.trim();
+
+  if (!site) {
+    return;
+  }
+
+  // Normalize the site URL
+  site = site.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+  try {
+    const settings = await chrome.storage.sync.get(['clickToCallDisabledSites']);
+    const disabledSites = settings.clickToCallDisabledSites || [];
+
+    // Check if site already exists
+    if (disabledSites.includes(site)) {
+      showStatus('settingsStatus', 'Site already in disabled list', 'error');
+      return;
+    }
+
+    // Add to list
+    disabledSites.push(site);
+    await chrome.storage.sync.set({ clickToCallDisabledSites: disabledSites });
+
+    // Clear input and reload list
+    input.value = '';
+    await loadDisabledSites();
+
+    showStatus('settingsStatus', `Added ${site} to disabled list. Reload page to apply.`, 'success');
+  } catch (error) {
+    console.error('Error adding disabled site:', error);
+    showStatus('settingsStatus', 'Failed to add site', 'error');
+  }
+}
+
+/**
+ * Remove a site from the disabled list
+ */
+async function removeDisabledSite(site) {
+  try {
+    const settings = await chrome.storage.sync.get(['clickToCallDisabledSites']);
+    const disabledSites = settings.clickToCallDisabledSites || [];
+
+    // Remove from list
+    const updatedSites = disabledSites.filter(s => s !== site);
+    await chrome.storage.sync.set({ clickToCallDisabledSites: updatedSites });
+
+    // Reload list
+    await loadDisabledSites();
+
+    showStatus('settingsStatus', `Removed ${site} from disabled list. Reload page to apply.`, 'success');
+  } catch (error) {
+    console.error('Error removing disabled site:', error);
+    showStatus('settingsStatus', 'Failed to remove site', 'error');
   }
 }
 

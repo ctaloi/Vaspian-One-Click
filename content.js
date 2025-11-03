@@ -54,12 +54,53 @@
   /**
    * Initialize the click-to-call functionality
    */
-  function init() {
+  async function init() {
+    // Check if click-to-call is enabled for this site
+    const enabled = await isClickToCallEnabled();
+    if (!enabled) {
+      console.log('Vaspian One Click: Click-to-call disabled for this site');
+      return;
+    }
+
     // Find and wrap phone numbers
     wrapPhoneNumbers();
 
     // Watch for dynamic content changes
     observePageChanges();
+  }
+
+  /**
+   * Check if click-to-call is enabled globally and for the current site
+   * @returns {Promise<boolean>}
+   */
+  async function isClickToCallEnabled() {
+    try {
+      const settings = await chrome.storage.sync.get(['clickToCallEnabled', 'clickToCallDisabledSites']);
+
+      // Default to enabled if setting doesn't exist
+      const globalEnabled = settings.clickToCallEnabled !== false;
+
+      if (!globalEnabled) {
+        return false;
+      }
+
+      // Check if current site is in the disabled list
+      const disabledSites = settings.clickToCallDisabledSites || [];
+      const currentHostname = window.location.hostname;
+
+      // Check if any disabled site matches the current hostname
+      const isDisabled = disabledSites.some(site => {
+        // Normalize the site URL (remove protocol, trailing slash, etc.)
+        const normalizedSite = site.replace(/^https?:\/\//, '').replace(/\/$/, '');
+        return currentHostname === normalizedSite || currentHostname.endsWith('.' + normalizedSite);
+      });
+
+      return !isDisabled;
+    } catch (error) {
+      console.error('Error checking click-to-call settings:', error);
+      // Default to enabled on error
+      return true;
+    }
   }
 
   /**
@@ -400,8 +441,17 @@
 
   // Initialize when the DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => init());
   } else {
     init();
   }
+
+  // Listen for settings changes to enable/disable click-to-call
+  chrome.storage.onChanged.addListener(async (changes, area) => {
+    if (area === 'sync' && (changes.clickToCallEnabled || changes.clickToCallDisabledSites)) {
+      // Reload the page to apply changes
+      console.log('Vaspian One Click: Settings changed, reloading page...');
+      window.location.reload();
+    }
+  });
 })();
